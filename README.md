@@ -4,10 +4,7 @@
 
 <div align="center">
 
-# nonebot-plugin-vocu
-
-_✨ vocu 语音合成插件 ✨_
-
+_✨ nonebot-plugin-vocu ✨_
 
 <a href="./LICENSE">
     <img src="https://img.shields.io/github/license/owner/nonebot-plugin-vocu.svg" alt="license">
@@ -73,11 +70,11 @@ _✨ vocu 语音合成插件 ✨_
 
 在 nonebot2 项目的`.env`文件中添加下表中的必填配置
 
-|      配置项       | 必填  | 默认值 |                      说明                      |
-| :---------------: | :---: | :----: | :--------------------------------------------: |
-|   vocu_api_key    |  是   |   ""   |                vocu.ai api_key                 |
-| vocu_request_type |  否   | async  | api 请求方式，默认 async， 氪金用户可选择 sync |
-| vocu_chars_limit  |  否   |  100   |               生成语音的字符限制               |
+|      配置项       |  必填  | 默认值 |                        说明                        |
+| :---------------: | :----: | :----: | :------------------------------------------------: |
+|   vocu_api_key    | **是** |   ""   | 请前往 https://www.vocu.ai/ 注册账号，获取 api key |
+| vocu_request_type |   否   | async  |   api 请求方式，默认 async， 氪金用户可选择 sync   |
+| vocu_chars_limit  |   否   |  100   |                 生成语音的字符限制                 |
 
 ## 🎉 使用
 ### 指令表
