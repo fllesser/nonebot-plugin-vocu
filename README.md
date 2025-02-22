@@ -20,7 +20,7 @@
 
 ## 📖 介绍
 
-[vocu.ai](https://www.vocu.ai/)插件
+nonebot2 [vocu.ai](https://www.vocu.ai/) 插件
 
 ## 💿 安装
 
