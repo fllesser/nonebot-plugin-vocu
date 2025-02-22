@@ -1,6 +1,4 @@
-from nonebot.plugin import (
-    PluginMetadata,
-)
+from nonebot.plugin import PluginMetadata
 
 from .config import Config
 from .matcher import vocu  # noqa: E402, F401
@@ -8,7 +6,7 @@ from .matcher import vocu  # noqa: E402, F401
 __plugin_meta__ = PluginMetadata(
     name="雷军说",
     description="vocu.ai 语音合成",
-    usage="xxx说xxx，支持回复消息",
+    usage="雷军说我开小米苏七，创死你们这群死哈逼(支持回复消息)",
     type="application",  # library
     homepage="https://github.com/fllesser/nonebot-plugin-aivoice",
     config=Config,
