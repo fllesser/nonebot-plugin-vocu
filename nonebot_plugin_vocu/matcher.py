@@ -23,8 +23,8 @@ async def _(matcher: Matcher, bot: Bot, event: MessageEvent):
         await matcher.finish()
     try:
         voice_id = await vocu.get_role_by_name(role_name)
-    except Exception as e:
-        await matcher.finish(f"{e}, 请发送角色列表获取支持的角色")
+    except Exception:
+        await matcher.finish()
     # 补充回复消息
     if reply := event.reply:
         content += reply.message.extract_plain_text().strip()
