@@ -1,21 +1,14 @@
-from nonebot import require
 from nonebot.plugin import (
     PluginMetadata,
-    # inherit_supported_adapters
 )
 
-require("nonebot_plugin_uninfo")
-require("nonebot_plugin_alconna")
-require("nonebot_plugin_localstore")
-require("nonebot_plugin_apscheduler")
-
-from .config import Config  # noqa: E402
-
+from .config import Config
+from .matcher import vocu  # noqa: E402, F401
 
 __plugin_meta__ = PluginMetadata(
-    name="名称",
-    description="描述",
-    usage="用法",
+    name="雷军说",
+    description="vocu.ai 语音合成",
+    usage="xxx说xxx，支持回复消息",
     type="application",  # library
     homepage="https://github.com/fllesser/nonebot-plugin-aivoice",
     config=Config,

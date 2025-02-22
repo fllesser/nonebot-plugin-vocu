@@ -1,6 +1,6 @@
 import httpx
-
-from dataclasses import dataclass, field
+import asyncio
+from dataclasses import dataclass, field, fields
 from .config import config
 
 
@@ -31,17 +31,26 @@ class Role:
         return f"{self.name}({self.id})"
 
 
+@dataclass
+class History:
+    role_name: str
+    text: str
+    audio: str
+
+    def __str__(self):
+        return f"{self.role_name}: {self.text}"
+
+
 class VocuClient:
     def __init__(self):
         self.auth = {"Authorization": "Bearer " + config.vocu_api_key}
         self.roles: list[Role] = []
+        self.histories: list[History] = []
 
     @property
     def fmt_roles(self) -> str:
         # 序号 角色名称(角色ID)
-        return "\n".join(
-            f"{i + 1}. {role.name}({role.id})" for i, role in enumerate(self.roles)
-        )
+        return "\n".join(f"{i + 1}. {role}" for i, role in enumerate(self.roles))
 
     def handle_error(self, response):
         status = response.get("status")
@@ -59,7 +68,11 @@ class VocuClient:
             )
         response = response.json()
         self.handle_error(response)
-        self.roles = [Role(**role) for role in response.get("data")]
+        role_fields = {f.name for f in fields(Role)}
+        self.roles = [
+            Role(**{k: v for k, v in role.items() if k in role_fields})
+            for role in response.get("data")
+        ]
         return self.roles
 
     async def get_role_by_name(self, role_name: str) -> str:
@@ -73,7 +86,7 @@ class VocuClient:
     # https://v1.vocu.ai/api/tts/voice/{id}
     async def delete_role(self, idx: int) -> str:
         role = self.roles[idx]
-        id = role.idForGenerate if role.idForGenerate else role.id
+        id = role.id
         async with httpx.AsyncClient() as client:
             response = await client.delete(
                 f"https://v1.vocu.ai/api/tts/voice/{id}", headers=self.auth
@@ -96,7 +109,7 @@ class VocuClient:
         await self.list_roles()
         return f"{response.get('message')}, voiceId: {response.get('voiceId')}"
 
-    async def generate(
+    async def sync_generate(
         self, voice_id: str, text: str, prompt_id: str | None = None
     ) -> str:
         async with httpx.AsyncClient() as client:
@@ -118,3 +131,74 @@ class VocuClient:
         response = response.json()
         self.handle_error(response)
         return response.get("data").get("audio")
+
+    async def async_generate(
+        self, voice_id: str, text: str, prompt_id: str | None = None
+    ) -> str:
+        # https://v1.vocu.ai/api/tts/generate
+        # 提交 任务
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://v1.vocu.ai/api/tts/generate",
+                headers=self.auth,
+                json={
+                    "contents": [
+                        {
+                            "voiceId": voice_id,
+                            "text": text,
+                            "promptId": prompt_id if prompt_id else "default",
+                        },
+                    ],
+                    "break_clone": True,
+                    "sharpen": False,
+                    "temperature": 1,
+                    "top_k": 1024,
+                    "top_p": 1,
+                    "srt": False,
+                    "seed": -1,
+                },
+            )
+        response = response.json()
+        self.handle_error(response)
+        # 获取任务 ID
+        task_id: str = response.get("data").get("id")
+        if not task_id:
+            raise Exception("获取任务ID失败")
+        # 轮训结果 https://v1.vocu.ai/api/tts/generate/{task_id}?stream=true
+        while True:
+            async with httpx.AsyncClient() as client:
+                response = await client.get(
+                    f"https://v1.vocu.ai/api/tts/generate/{task_id}?stream=true",
+                    headers=self.auth,
+                )
+            response = response.json()
+            data = response.get("data")
+            if data.get("status") == "generated":
+                return data["metadata"]["contents"][0]["audio"]
+            # 根据 text 长度决定 休眠时间
+            await asyncio.sleep(3)
+
+    async def fetch_histories(self, limit: int = 10) -> list[str]:
+        # https://v1.vocu.ai/api/tts/generate?offset=20&limit=20&stream=true
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"https://v1.vocu.ai/api/tts/generate?offset=0&limit={limit}&stream=true",
+                headers=self.auth,
+            )
+        response = response.json()
+        self.handle_error(response)
+        data_lst = response.get("data")
+        if not data_lst and not isinstance(data_lst, list):
+            raise Exception("获取历史记录失败")
+
+        # 生成历史记录
+        self.histories = [
+            History(
+                role_name=data["metadata"]["voices"][0]["name"],
+                text=data["metadata"]["contents"][0]["text"],
+                audio=data["metadata"]["contents"][0]["audio"],
+            )
+            for data in data_lst
+        ]
+
+        return [str(history) for history in self.histories]
