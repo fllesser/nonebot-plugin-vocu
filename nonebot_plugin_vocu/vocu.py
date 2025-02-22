@@ -38,7 +38,7 @@ class History:
     audio: str
 
     def __str__(self):
-        return f"{self.role_name}: {self.text}"
+        return f"{self.role_name}: {self.text}\n下载链接:{self.audio}"
 
 
 class VocuClient:
