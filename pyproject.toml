@@ -1,6 +1,6 @@
 [project]
 name = "nonebot-plugin-template"
-version = "0.0.1"
+version = "0.1.0"
 description = "插件描述"
 readme = "README.md"
 authors = [{ name = "fllesser", email = "fllessive@gmail.com" }]
@@ -24,4 +24,4 @@ dev = [
 lint = ["ruff"]
 
 [tool.nonebot]
-plugins = ["nonebot_plugin_aivoice"]
+plugins = ["nonebot_plugin_vocu"]
