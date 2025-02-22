@@ -19,8 +19,8 @@ async def _(matcher: Matcher, bot: Bot, event: MessageEvent):
     role_name = matched.group(1).strip()
     content = matched.group(2).strip()
     # 校验 role_name
-    if len(role_name) > 10:
-        await matcher.finish()
+    # if len(role_name) > 10:
+    #     await matcher.finish()
     try:
         voice_id = await vocu.get_role_by_name(role_name)
     except Exception:
@@ -49,11 +49,13 @@ async def _(matcher: Matcher, bot: Bot, event: MessageEvent):
 @on_command("vocu.list", aliases={"角色列表"}, priority=10, block=True).handle()
 async def _(matcher: Matcher, bot: Bot):
     await vocu.list_roles()
-    await matcher.send(
+    nodes = [
         MessageSegment.node_custom(
-            user_id=int(bot.self_id), nickname="角色列表", content=vocu.fmt_roles
+            user_id=int(bot.self_id), nickname="角色列表", content=f"{i + 1}. {role}"
         )
-    )
+        for i, role in enumerate(vocu.roles)
+    ]
+    await matcher.send(Message(nodes))
 
 
 @on_command("vocu.del", priority=10, block=True, permission=SUPERUSER).handle()

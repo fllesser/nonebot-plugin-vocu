@@ -26,9 +26,8 @@ class Role:
     status: str
     metadata: Metadata
 
-    # _str_
     def __str__(self):
-        return f"{self.name}({self.id})"
+        return f"{self.name}({self.metadata.description})"
 
 
 @dataclass
@@ -38,7 +37,7 @@ class History:
     audio: str
 
     def __str__(self):
-        return f"{self.role_name}: {self.text}\n下载链接:{self.audio}"
+        return f"{self.role_name}: {self.text}\n{self.audio}"
 
 
 class VocuClient:
