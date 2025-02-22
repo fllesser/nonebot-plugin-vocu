@@ -6,7 +6,7 @@
 
 # nonebot-plugin-aivoice
 
-_✨ NoneBot 插件简单描述 ✨_
+_✨ vocu 语音合成插件 ✨_
 
 
 <a href="./LICENSE">
