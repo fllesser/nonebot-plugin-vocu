@@ -30,6 +30,11 @@ class Role:
         return f"{self.name}({self.metadata.description})"
 
 
+def filter_role_data(data: dict) -> dict:
+    allowed_fields = {f.name for f in fields(Role)}
+    return {k: v for k, v in data.items() if k in allowed_fields}
+
+
 @dataclass
 class History:
     role_name: str
@@ -67,11 +72,7 @@ class VocuClient:
             )
         response = response.json()
         self.handle_error(response)
-        role_fields = {f.name for f in fields(Role)}
-        self.roles = [
-            Role(**{k: v for k, v in role.items() if k in role_fields})
-            for role in response.get("data")
-        ]
+        self.roles = [Role(**filter_role_data(role)) for role in response.get("data")]
         return self.roles
 
     async def get_role_by_name(self, role_name: str) -> str:
