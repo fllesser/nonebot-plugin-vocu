@@ -1,21 +1,21 @@
 import httpx
 import asyncio
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, fields
 from .config import config
 
 
-@dataclass
-class Prompt:
-    id: str
-    name: str
-    promptOriginAudioStorageUrl: str
+# @dataclass
+# class Prompt:
+#     id: str
+#     name: str
+#     promptOriginAudioStorageUrl: str
 
 
-@dataclass
-class Metadata:
-    avatar: str
-    description: str
-    prompts: list[Prompt] = field(default_factory=list)
+# @dataclass
+# class Metadata:
+#     avatar: str
+#     description: str
+#     prompts: list[Prompt] = field(default_factory=list)
 
 
 @dataclass
@@ -24,10 +24,10 @@ class Role:
     idForGenerate: str | None
     name: str
     status: str
-    metadata: Metadata
+    # metadata: Metadata
 
     def __str__(self):
-        return f"{self.name}({self.metadata.description})"
+        return self.name
 
 
 def filter_role_data(data: dict) -> dict:
