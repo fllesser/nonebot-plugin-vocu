@@ -4,10 +4,11 @@
 
 <div align="center">
 
-_✨ nonebot-plugin-vocu ✨_
+# ✨ nonebot-plugin-vocu ✨
+
 
 <a href="./LICENSE">
-    <img src="https://img.shields.io/github/license/owner/nonebot-plugin-vocu.svg" alt="license">
+    <img src="https://img.shields.io/github/license/fllesser/nonebot-plugin-vocu.svg" alt="license">
 </a>
 <a href="https://pypi.python.org/pypi/nonebot-plugin-vocu">
     <img src="https://img.shields.io/pypi/v/nonebot-plugin-vocu.svg" alt="pypi">
@@ -19,7 +20,7 @@ _✨ nonebot-plugin-vocu ✨_
 
 ## 📖 介绍
 
-这里是插件的详细介绍部分
+[vocu.ai](https://www.vocu.ai/)插件
 
 ## 💿 安装
 
