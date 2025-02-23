@@ -85,10 +85,10 @@ async def _(matcher: Matcher, args: Message = CommandArg()):
 
 @on_command("vocu.history", aliases={"历史生成"}, priority=10, block=True).handle()
 async def _(matcher: Matcher, bot: Bot, args: Message = CommandArg()):
-    limit = args.extract_plain_text().strip()
-    limit = 10 if not limit.isdigit() else int(limit)
+    size = args.extract_plain_text().strip()
+    size = 10 if not size.isdigit() else int(size)
     try:
-        histories: list[str] = await vocu.fetch_histories(limit)
+        histories: list[str] = await vocu.fetch_mutil_page_histories(size)
     except Exception as e:
         await matcher.finish(str(e))
     nodes = [

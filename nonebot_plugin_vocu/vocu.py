@@ -178,11 +178,23 @@ class VocuClient:
             # 根据 text 长度决定 休眠时间
             await asyncio.sleep(3)
 
-    async def fetch_histories(self, limit: int = 10) -> list[str]:
+    async def fetch_mutil_page_histories(self, size: int = 20) -> list[str]:
+        pages = size // 20
+        pages = pages if pages < 5 else 5
+        histories: list[History] = []
+        for i in range(pages):
+            try:
+                histories.extend(await self.fetch_histories(i * 20, 20))
+            except Exception:
+                break
+        self.histories = histories
+        return [str(history) for history in histories]
+
+    async def fetch_histories(self, offset: int = 0, limit: int = 20) -> list[History]:
         # https://v1.vocu.ai/api/tts/generate?offset=20&limit=20&stream=true
         async with httpx.AsyncClient() as client:
             response = await client.get(
-                f"https://v1.vocu.ai/api/tts/generate?offset=0&limit={limit}&stream=true",
+                f"https://v1.vocu.ai/api/tts/generate?offset={offset}&limit={limit}&stream=true",
                 headers=self.auth,
             )
         response = response.json()
@@ -192,7 +204,7 @@ class VocuClient:
             raise Exception("获取历史记录失败")
 
         # 生成历史记录
-        self.histories = [
+        return [
             History(
                 role_name=data["metadata"]["voices"][0]["name"],
                 text=data["metadata"]["contents"][0]["text"],
@@ -200,5 +212,3 @@ class VocuClient:
             )
             for data in data_lst
         ]
-
-        return [str(history) for history in self.histories]
