@@ -49,11 +49,15 @@ async def _(matcher: Matcher, bot: Bot, event: MessageEvent):
 @on_command("vocu.list", aliases={"角色列表"}, priority=10, block=True).handle()
 async def _(matcher: Matcher, bot: Bot):
     await vocu.list_roles()
+
+    roles = [f"{i + 1}. {role}" for i, role in enumerate(vocu.roles)]
+    roles = ["\n".join(roles[i : i + 10]) for i in range(0, len(roles), 10)]
+
     nodes = [
         MessageSegment.node_custom(
-            user_id=int(bot.self_id), nickname="角色列表", content=f"{i + 1}. {role}"
+            user_id=int(bot.self_id), nickname="角色列表", content=role
         )
-        for i, role in enumerate(vocu.roles)
+        for role in roles
     ]
     await matcher.send(Message(nodes))
 
