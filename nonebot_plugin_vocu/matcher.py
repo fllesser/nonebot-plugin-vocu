@@ -13,7 +13,7 @@ vocu = VocuClient()
 
 
 # xxx说xxx
-@on_regex(r"(.+)说(.*)").handle()
+@on_regex(r"(.+?)说(.*)").handle()
 async def _(matcher: Matcher, bot: Bot, event: MessageEvent):
     matched: re.Match[str] = matcher.state[REGEX_MATCHED]
     role_name = matched.group(1).strip()
