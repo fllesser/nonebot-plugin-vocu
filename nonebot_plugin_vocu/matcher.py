@@ -2,10 +2,9 @@ import re
 
 from nonebot.plugin.on import on_regex, on_command
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, Bot, MessageEvent
-from nonebot.consts import REGEX_MATCHED
 from nonebot.matcher import Matcher
 from nonebot.permission import SUPERUSER
-from nonebot.params import CommandArg
+from nonebot.params import CommandArg, RegexMatched
 from .vocu import VocuClient
 from .config import config
 
@@ -14,8 +13,12 @@ vocu = VocuClient()
 
 # xxx说xxx
 @on_regex(r"(.+?)说(.*)").handle()
-async def _(matcher: Matcher, bot: Bot, event: MessageEvent):
-    matched: re.Match[str] = matcher.state[REGEX_MATCHED]
+async def _(
+    matcher: Matcher,
+    bot: Bot,
+    event: MessageEvent,
+    matched: re.Match[str] = RegexMatched(),
+):
     role_name = matched.group(1).strip()
     content = matched.group(2).strip()
     # 校验 role_name
