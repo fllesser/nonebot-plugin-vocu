@@ -4,27 +4,12 @@ from dataclasses import dataclass, fields
 from .config import config
 
 
-# @dataclass
-# class Prompt:
-#     id: str
-#     name: str
-#     promptOriginAudioStorageUrl: str
-
-
-# @dataclass
-# class Metadata:
-#     avatar: str
-#     description: str
-#     prompts: list[Prompt] = field(default_factory=list)
-
-
 @dataclass
 class Role:
     id: str
     idForGenerate: str | None
     name: str
     status: str
-    # metadata: Metadata
 
     def __str__(self):
         return self.name
@@ -187,6 +172,8 @@ class VocuClient:
                 histories.extend(await self.fetch_histories(i * 20, 20))
             except Exception:
                 break
+        if not histories:
+            raise Exception("获取历史记录失败")
         self.histories = histories
         return [str(history) for history in histories]
 
@@ -197,6 +184,7 @@ class VocuClient:
                 f"https://v1.vocu.ai/api/tts/generate?offset={offset}&limit={limit}&stream=true",
                 headers=self.auth,
             )
+            response.raise_for_status()
         response = response.json()
         self.handle_error(response)
         data_lst = response.get("data")
@@ -204,11 +192,19 @@ class VocuClient:
             raise Exception("获取历史记录失败")
 
         # 生成历史记录
-        return [
-            History(
-                role_name=data["metadata"]["voices"][0]["name"],
-                text=data["metadata"]["contents"][0]["text"],
-                audio=data["metadata"]["contents"][0]["audio"],
-            )
-            for data in data_lst
-        ]
+        histories: list[History] = []
+        for data in data_lst:
+            try:
+                # 校验必要字段存在
+                role_name = data["metadata"]["voices"][0]["name"]
+                content = data["metadata"]["contents"][0]
+                histories.append(
+                    History(
+                        role_name=role_name,
+                        text=content["text"],
+                        audio=content["audio"],
+                    )
+                )
+            except (KeyError, IndexError):
+                continue
+        return histories
