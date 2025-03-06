@@ -1,7 +1,7 @@
 [project]
 name = "nonebot-plugin-vocu"
 version = "0.1.6"
-description = "nonebot2 onebot v1 Vocu 语音插件"
+description = "nonebot2 onebot v11 Vocu 语音插件"
 readme = "README.md"
 authors = [{ name = "fllesser", email = "fllessive@gmail.com" }]
 requires-python = ">=3.10,<3.13"

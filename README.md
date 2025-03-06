@@ -70,6 +70,17 @@ nonebot2 [vocu.ai](https://www.vocu.ai/) 插件
 
 </details>
 
+<details open>
+<summary>安装必要组件</summary>
+<summary>发送语音依赖于 ffmpeg</summary>
+
+    # ubuntu/debian
+    sudo apt-get install ffmpeg
+    ffmpeg -version
+    # 其他 linux 参考: https://gitee.com/baihu433/ffmpeg
+    # Windows 参考: https://www.jianshu.com/p/5015a477de3c
+</details>
+
 ## ⚙️ 配置
 
 在 nonebot2 项目的`.env`文件中添加下表中的必填配置
