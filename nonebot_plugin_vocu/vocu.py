@@ -59,7 +59,13 @@ class VocuClient:
         self.auth = {"Authorization": "Bearer " + config.vocu_api_key}
         self.roles: list[Role] = []
         self.histories: list[History] = []
-        self.session: aiohttp.ClientSession = aiohttp.ClientSession(headers=self.auth)
+        self._session: aiohttp.ClientSession | None = None
+
+    @property
+    async def session(self) -> aiohttp.ClientSession:
+        if not self._session:
+            self._session = aiohttp.ClientSession(headers=self.auth)
+        return self._session
 
     @property
     def fmt_roles(self) -> str:
@@ -77,7 +83,8 @@ class VocuClient:
         """
         获取角色列表
         """
-        async with self.session.get(
+        session = await self.session
+        async with session.get(
             "https://v1.vocu.ai/api/tts/voice",
             params={"showMarket": "true"},
         ) as response:
@@ -104,7 +111,8 @@ class VocuClient:
         """
         role = self.roles[idx]
         id = role.id
-        async with self.session.delete(f"https://v1.vocu.ai/api/tts/voice/{id}") as response:
+        session = await self.session
+        async with session.delete(f"https://v1.vocu.ai/api/tts/voice/{id}") as response:
             response = await response.json()
         self.handle_error(response)
         await self.list_roles()
@@ -115,7 +123,8 @@ class VocuClient:
         """
         添加角色
         """
-        async with self.session.post(
+        session = await self.session
+        async with session.post(
             "https://v1.vocu.ai/api/voice/byShareId",
             json={"shareId": share_id},
         ) as response:
@@ -128,7 +137,8 @@ class VocuClient:
         """
         同步生成音频
         """
-        async with self.session.post(
+        session = await self.session
+        async with session.post(
             "https://v1.vocu.ai/api/tts/simple-generate",
             json={
                 "voiceId": voice_id,
@@ -152,7 +162,8 @@ class VocuClient:
         """
         # https://v1.vocu.ai/api/tts/generate
         # 提交 任务
-        async with self.session.post(
+        session = await self.session
+        async with session.post(
             "https://v1.vocu.ai/api/tts/generate",
             json={
                 "contents": [
@@ -179,7 +190,8 @@ class VocuClient:
             raise Exception("获取任务ID失败")
         # 轮训结果 https://v1.vocu.ai/api/tts/generate/{task_id}?stream=true
         while True:
-            async with self.session.get(
+            session = await self.session
+            async with session.get(
                 f"https://v1.vocu.ai/api/tts/generate/{task_id}?stream=true",
             ) as response:
                 response = await response.json()
@@ -211,7 +223,8 @@ class VocuClient:
         获取历史记录
         """
         # https://v1.vocu.ai/api/tts/generate?offset=20&limit=20&stream=true
-        async with self.session.get(
+        session = await self.session
+        async with session.get(
             f"https://v1.vocu.ai/api/tts/generate?offset={offset}&limit={limit}&stream=true"
         ) as response:
             response = await response.json()
@@ -252,7 +265,8 @@ class VocuClient:
         if file_path.exists():
             return file_path
 
-        async with self.session.get(url) as response:
+        session = await self.session
+        async with session.get(url) as response:
             try:
                 response.raise_for_status()
                 with tqdm(
