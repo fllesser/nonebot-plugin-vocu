@@ -1,4 +1,4 @@
-async def test_vocu():
-    import nonebot
+def test_check_load():
+    from nonebot import require
 
-    assert nonebot.get_plugin("nonebot_plugin_vocu")
+    assert require("nonebot_plugin_vocu")
