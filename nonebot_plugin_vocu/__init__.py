@@ -132,4 +132,5 @@ async def _(matcher: Matcher, args: Message = CommandArg()):
     if idx < 0 or idx >= len(vocu_client.histories):
         await matcher.finish("请输入正确的序号")
     audio_url = vocu_client.histories[idx].audio
-    await matcher.send(MessageSegment.record(audio_url))
+    audio_path = await vocu_client.download_audio(audio_url)
+    await matcher.send(MessageSegment.record(audio_path))
