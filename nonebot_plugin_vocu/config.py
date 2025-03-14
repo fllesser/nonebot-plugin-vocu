@@ -1,7 +1,7 @@
-from nonebot import get_plugin_config
-
-from pydantic import BaseModel
 from typing import Literal
+
+from nonebot import get_plugin_config
+from pydantic import BaseModel
 
 
 class Config(BaseModel):
