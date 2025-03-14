@@ -1,6 +1,18 @@
-import httpx
 import asyncio
 from dataclasses import dataclass, fields
+import hashlib
+from pathlib import Path
+from urllib.parse import urlparse
+
+import aiofiles
+import aiohttp
+from nonebot import require
+from nonebot.log import logger
+from tqdm.asyncio import tqdm
+
+require("nonebot_plugin_localstore")
+import nonebot_plugin_localstore as store
+
 from .config import config
 
 
@@ -41,7 +53,7 @@ class VocuClient:
         # 序号 角色名称(角色ID)
         return "\n".join(f"{i + 1}. {role}" for i, role in enumerate(self.roles))
 
-    def handle_error(self, response):
+    def handle_error(self, response: dict):
         status = response.get("status")
         if status != 200:
             raise Exception(f"status: {status}, message: {response.get('message')}")
@@ -49,13 +61,12 @@ class VocuClient:
     # https://v1.vocu.ai/api/tts/voice
     # query参数: showMarket default=false
     async def list_roles(self):
-        async with httpx.AsyncClient() as client:
-            response = await client.get(
+        async with aiohttp.ClientSession(headers=self.auth) as session:
+            async with session.get(
                 "https://v1.vocu.ai/api/tts/voice",
-                headers=self.auth,
                 params={"showMarket": "true"},
-            )
-        response = response.json()
+            ) as response:
+                response = await response.json()
         self.handle_error(response)
         self.roles = [Role(**filter_role_data(role)) for role in response.get("data")]
         return self.roles
@@ -72,36 +83,32 @@ class VocuClient:
     async def delete_role(self, idx: int) -> str:
         role = self.roles[idx]
         id = role.id
-        async with httpx.AsyncClient() as client:
-            response = await client.delete(
-                f"https://v1.vocu.ai/api/tts/voice/{id}", headers=self.auth
-            )
-        response = response.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.delete(f"https://v1.vocu.ai/api/tts/voice/{id}", headers=self.auth) as response:
+                response = await response.json()
         self.handle_error(response)
         await self.list_roles()
         return f"{response.get('message')}"
 
     # https://v1.vocu.ai/api/voice/byShareId Body参数application/json {"shareId": "string"}
     async def add_role(self, share_id: str) -> str:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
                 "https://v1.vocu.ai/api/voice/byShareId",
                 headers=self.auth,
                 json={"shareId": share_id},
-            )
+            ) as response:
+                response = await response.json()
         response = response.json()
         self.handle_error(response)
         await self.list_roles()
         return f"{response.get('message')}, voiceId: {response.get('voiceId')}"
 
-    async def sync_generate(
-        self, voice_id: str, text: str, prompt_id: str | None = None
-    ) -> str:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
+    async def sync_generate(self, voice_id: str, text: str, prompt_id: str | None = None) -> str:
+        async with aiohttp.ClientSession(headers=self.auth) as session:
+            async with session.post(
                 "https://v1.vocu.ai/api/tts/simple-generate",
-                headers=self.auth,
-                json={
+                data={
                     "voiceId": voice_id,
                     "text": text,
                     "promptId": prompt_id if prompt_id else "default",  # 角色风格
@@ -112,21 +119,18 @@ class VocuClient:
                     "seed": -1,
                     # "dictionary": [], # 读音字典，格式为：[ ["音素", [["y", "in1"],["s" "u4"]]]]
                 },
-            )
-        response = response.json()
+            ) as response:
+                response = await response.json()
         self.handle_error(response)
         return response.get("data").get("audio")
 
-    async def async_generate(
-        self, voice_id: str, text: str, prompt_id: str | None = None
-    ) -> str:
+    async def async_generate(self, voice_id: str, text: str, prompt_id: str | None = None) -> str:
         # https://v1.vocu.ai/api/tts/generate
         # 提交 任务
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
+        async with aiohttp.ClientSession(headers=self.auth) as session:
+            async with session.post(
                 "https://v1.vocu.ai/api/tts/generate",
-                headers=self.auth,
-                json={
+                data={
                     "contents": [
                         {
                             "voiceId": voice_id,
@@ -142,8 +146,8 @@ class VocuClient:
                     "srt": False,
                     "seed": -1,
                 },
-            )
-        response = response.json()
+            ) as response:
+                response = await response.json()
         self.handle_error(response)
         # 获取任务 ID
         task_id: str = response.get("data").get("id")
@@ -151,12 +155,11 @@ class VocuClient:
             raise Exception("获取任务ID失败")
         # 轮训结果 https://v1.vocu.ai/api/tts/generate/{task_id}?stream=true
         while True:
-            async with httpx.AsyncClient() as client:
-                response = await client.get(
+            async with aiohttp.ClientSession(headers=self.auth) as session:
+                async with session.get(
                     f"https://v1.vocu.ai/api/tts/generate/{task_id}?stream=true",
-                    headers=self.auth,
-                )
-            response = response.json()
+                ) as response:
+                    response = await response.json()
             data = response.get("data")
             if data.get("status") == "generated":
                 return data["metadata"]["contents"][0]["audio"]
@@ -179,13 +182,11 @@ class VocuClient:
 
     async def fetch_histories(self, offset: int = 0, limit: int = 20) -> list[History]:
         # https://v1.vocu.ai/api/tts/generate?offset=20&limit=20&stream=true
-        async with httpx.AsyncClient() as client:
-            response = await client.get(
-                f"https://v1.vocu.ai/api/tts/generate?offset={offset}&limit={limit}&stream=true",
-                headers=self.auth,
-            )
-            response.raise_for_status()
-        response = response.json()
+        async with aiohttp.ClientSession(headers=self.auth) as session:
+            async with session.get(
+                f"https://v1.vocu.ai/api/tts/generate?offset={offset}&limit={limit}&stream=true"
+            ) as response:
+                response = await response.json()
         self.handle_error(response)
         data_lst = response.get("data")
         if not data_lst and not isinstance(data_lst, list):
@@ -208,3 +209,45 @@ class VocuClient:
             except (KeyError, IndexError):
                 continue
         return histories
+
+    async def download_audio(self, url: str) -> Path:
+        file_name = generate_file_name(url)
+        file_path = store.get_plugin_cache_file(file_name)
+        if file_path.exists():
+            return file_path
+
+        async with aiohttp.ClientSession(
+            headers=self.auth, timeout=aiohttp.ClientTimeout(total=300, connect=10.0)
+        ) as session:
+            try:
+                async with session.get(url) as response:
+                    response.raise_for_status()
+                    with tqdm(
+                        total=int(response.headers.get("Content-Length", 0)),
+                        unit="B",
+                        unit_scale=True,
+                        unit_divisor=1024,
+                        dynamic_ncols=True,
+                        colour="green",
+                    ) as bar:
+                        # 设置前缀信息
+                        bar.set_description(file_name)
+                        async with aiofiles.open(file_path, "wb") as f:
+                            async for chunk in response.content.iter_chunked(1024 * 1024):
+                                await f.write(chunk)
+                                bar.update(len(chunk))
+            except (aiohttp.ClientError, asyncio.TimeoutError) as e:
+                logger.error(f"url: {url}, file_path: {file_path} 下载过程中出现异常{e}")
+                raise
+
+        return file_path
+
+
+def generate_file_name(url: str, suffix: str | None = None) -> str:
+    # 根据 url 获取文件后缀
+    path = Path(urlparse(url).path)
+    suffix = path.suffix if path.suffix else suffix
+    # 获取 url 的 md5 值
+    url_hash = hashlib.md5(url.encode()).hexdigest()[:16]
+    file_name = f"{url_hash}{suffix}"
+    return file_name
