@@ -1,2 +1,4 @@
 async def test_vocu():
-    pass
+    import nonebot
+
+    assert nonebot.get_plugin("nonebot_plugin_vocu")
