@@ -1,6 +1,6 @@
 [project]
 name = "nonebot-plugin-vocu"
-version = "0.1.6"
+version = "0.2.0"
 description = "nonebot2 onebot v11 Vocu 语音插件"
 readme = "README.md"
 authors = [{ name = "fllesser", email = "fllessive@gmail.com" }]
