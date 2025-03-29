@@ -31,6 +31,15 @@ class Role:
         return self.name
 
 
+class VocuError(Exception):
+    """
+    vocu 错误
+    """
+
+    def __init__(self, message: str):
+        self.message = message
+
+
 def filter_role_data(data: dict) -> dict:
     allowed_fields = {f.name for f in fields(Role)}
     return {k: v for k, v in data.items() if k in allowed_fields}
@@ -77,7 +86,7 @@ class VocuClient:
     def handle_error(self, response: dict):
         status = response.get("status")
         if status != 200:
-            raise Exception(f"status: {status}, message: {response.get('message')}")
+            raise VocuError(f"status: {status}, message: {response.get('message')}")
 
     # https://v1.vocu.ai/api/tts/voice
     # query参数: showMarket default=false
@@ -104,7 +113,7 @@ class VocuClient:
         for role in self.roles:
             if role.name == role_name:
                 return role.idForGenerate if role.idForGenerate else role.id
-        raise Exception(f"找不到角色: {role_name}")
+        raise ValueError(f"找不到角色: {role_name}")
 
     # https://v1.vocu.ai/api/tts/voice/{id}
     async def delete_role(self, idx: int) -> str:
@@ -134,6 +143,14 @@ class VocuClient:
         self.handle_error(response)
         await self.list_roles()
         return f"{response.get('message')}, voiceId: {response.get('voiceId')}"
+
+    async def generate(self, *, voice_id: str, text: str, prompt_id: str | None = None) -> str:
+        """
+        生成音频
+        """
+        if config.vocu_request_type == "sync":
+            return await self.sync_generate(voice_id, text, prompt_id)
+        return await self.async_generate(voice_id, text, prompt_id)
 
     async def sync_generate(self, voice_id: str, text: str, prompt_id: str | None = None) -> str:
         """
@@ -213,10 +230,11 @@ class VocuClient:
         for i in range(pages):
             try:
                 histories.extend(await self.fetch_histories(i * 20, 20))
-            except Exception:
+            except VocuError as e:
+                logger.error(f"获取 {i * 20} - {i * 20 + 20} 的历史记录失败: {e}")
                 break
         if not histories:
-            raise Exception("获取历史记录失败")
+            raise VocuError("历史记录为空")
         self.histories = histories
         return [str(history) for history in histories]
 
@@ -233,7 +251,7 @@ class VocuClient:
         self.handle_error(response)
         data_lst = response.get("data")
         if not data_lst and not isinstance(data_lst, list):
-            raise Exception("获取历史记录失败")
+            raise VocuError("history list is empty")
 
         # 生成历史记录
         histories: list[History] = []
