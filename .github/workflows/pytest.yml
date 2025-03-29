@@ -3,8 +3,11 @@ name: Pytest
 on:
   push:
     branches:
-      - '*'
-
+      - 'master'
+    paths-ignore:
+      - 'README.md'
+  pull_request:
+    
 jobs:
   build:
     runs-on: ubuntu-latest
