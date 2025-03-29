@@ -52,19 +52,21 @@ class History:
 
 class VocuClient:
     """
-    vocu http client
+    vocu client
     """
 
     def __init__(self):
-        self.auth = {"Authorization": "Bearer " + config.vocu_api_key}
         self.roles: list[Role] = []
         self.histories: list[History] = []
         self._session: aiohttp.ClientSession | None = None
 
     @property
     async def session(self) -> aiohttp.ClientSession:
-        if not self._session:
-            self._session = aiohttp.ClientSession(headers=self.auth)
+        if not self._session or self._session.closed:
+            headers = {"Authorization": "Bearer " + config.vocu_api_key}
+            self._session = aiohttp.ClientSession(
+                headers=headers, proxy=config.vocu_proxy if config.vocu_proxy else None
+            )
         return self._session
 
     @property
@@ -266,7 +268,7 @@ class VocuClient:
             return file_path
 
         session = await self.session
-        async with session.get(url) as response:
+        async with session.get(url) as response, aiofiles.open(file_path, "wb") as file:
             try:
                 response.raise_for_status()
                 with tqdm(
@@ -276,14 +278,14 @@ class VocuClient:
                     unit_divisor=1024,
                     dynamic_ncols=True,
                     colour="green",
+                    desc=file_name,
                 ) as bar:
-                    # 设置前缀信息
-                    bar.set_description(file_name)
-                    async with aiofiles.open(file_path, "wb") as f:
-                        async for chunk in response.content.iter_chunked(1024 * 1024):
-                            await f.write(chunk)
-                            bar.update(len(chunk))
+                    async for chunk in response.content.iter_chunked(1024 * 1024):
+                        await file.write(chunk)
+                        bar.update(len(chunk))
             except (aiohttp.ClientError, asyncio.TimeoutError) as e:
+                if file_path.exists():
+                    file_path.unlink()
                 logger.error(f"url: {url}, file_path: {file_path} 下载过程中出现异常{e}")
                 raise
 
