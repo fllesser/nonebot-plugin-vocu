@@ -97,6 +97,7 @@ nonebot2 [vocu.ai](https://www.vocu.ai/) 插件
 |   vocu_api_key    | **是** |   ""   | 请前往 https://www.vocu.ai/ 注册账号，获取 api key |
 | vocu_request_type |   否   | async  |   api 请求方式，默认 async， 氪金用户可选择 sync   |
 | vocu_chars_limit  |   否   |  100   |                 生成语音的字符限制                 |
+|    vocu_proxy     |   否   |   ""   |    无法直连需填，格式： "http://127.0.0.1:7890"    |
 
 ## 🎉 使用
 ### 指令表
