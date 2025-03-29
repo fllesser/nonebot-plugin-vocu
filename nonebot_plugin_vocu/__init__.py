@@ -9,11 +9,14 @@ __plugin_meta__ = PluginMetadata(
     type="application",  # library
     homepage="https://github.com/fllesser/nonebot-plugin-vocu",
     config=Config,
-    # supported_adapters=inherit_supported_adapters(
-    #     "nonebot_plugin_alconna", "nonebot_plugin_uninfo"
-    # ),
     supported_adapters={"~onebot.v11"},
-    extra={"author": "fllesser <fllessive@gmail.com>"},
+    extra={
+        "author": "fllesser",
+        "email": "fllessive@gmail.com",
+        "version": "0.3.0",
+        "license": "MIT",
+        "homepage": "https://github.com/fllesser/nonebot-plugin-vocu",
+    },
 )
 
 import re
@@ -25,7 +28,7 @@ from nonebot.permission import SUPERUSER
 from nonebot.plugin.on import on_command, on_regex
 
 from .config import config
-from .vocu import VocuClient
+from .vocu import VocuClient, VocuError
 
 vocu_client = VocuClient()
 
@@ -40,13 +43,9 @@ async def _(
 ):
     role_name = matched.group(1).strip()
     content = matched.group(2).strip()
-    # 校验 role_name
-    # if len(role_name) > 10:
-    #     await matcher.finish()
-    try:
-        voice_id = await vocu_client.get_role_by_name(role_name)
-    except Exception:
-        await matcher.finish()
+    # 获取角色ID
+    voice_id = await vocu_client.get_role_by_name(role_name)
+
     # 补充回复消息
     if reply := event.reply:
         content += reply.message.extract_plain_text().strip()
@@ -56,13 +55,13 @@ async def _(
         await matcher.finish(f"不能超过 {config.vocu_chars_limit} 字符")
     # 提示用户
     await bot.call_api("set_msg_emoji_like", message_id=event.message_id, emoji_id="282")
+
+    # 生成语音
     try:
-        if config.vocu_request_type == "sync":
-            audio_url = await vocu_client.sync_generate(voice_id, content)
-        else:
-            audio_url = await vocu_client.async_generate(voice_id, content)
-    except Exception as e:
+        audio_url = await vocu_client.generate(voice_id=voice_id, text=content)
+    except VocuError as e:
         await matcher.finish(str(e))
+
     # 下载语音到缓存
     audio_path = await vocu_client.download_audio(audio_url)
     await matcher.send(MessageSegment.record(audio_path))
@@ -89,7 +88,7 @@ async def _(matcher: Matcher, args: Message = CommandArg()):
         await matcher.finish("请输入正确的序号")
     try:
         msg = await vocu_client.delete_role(idx)
-    except Exception as e:
+    except VocuError as e:
         await matcher.finish(str(e))
     await matcher.send("删除角色成功 " + msg)
 
@@ -99,7 +98,7 @@ async def _(matcher: Matcher, args: Message = CommandArg()):
     share_id = args.extract_plain_text().strip()
     try:
         msg = await vocu_client.add_role(share_id)
-    except Exception as e:
+    except VocuError as e:
         await matcher.finish(str(e))
     await matcher.send("添加角色成功 " + msg)
 
@@ -110,7 +109,7 @@ async def _(matcher: Matcher, bot: Bot, args: Message = CommandArg()):
     size = 20 if not size.isdigit() else int(size)
     try:
         histories: list[str] = await vocu_client.fetch_mutil_page_histories(size)
-    except Exception as e:
+    except VocuError as e:
         await matcher.finish(str(e))
     nodes = [
         MessageSegment.node_custom(
