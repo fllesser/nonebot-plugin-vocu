@@ -44,7 +44,10 @@ async def _(
     role_name = matched.group(1).strip()
     content = matched.group(2).strip()
     # 获取角色ID
-    voice_id = await vocu_client.get_role_by_name(role_name)
+    try:
+        voice_id = await vocu_client.get_role_by_name(role_name)
+    except ValueError:
+        await matcher.finish()
 
     # 补充回复消息
     if reply := event.reply:
