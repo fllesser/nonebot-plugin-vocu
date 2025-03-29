@@ -3,8 +3,11 @@ name: Pytest
 on:
   push:
     branches:
-      - '*'
-
+      - 'master'
+    paths-ignore:
+      - 'README.md'
+  pull_request:
+    
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,4 +35,4 @@ jobs:
 
     - name: Run all tests
       run: |
-        python -m pytest -v -s
+        uv run pytest
