@@ -1,14 +1,11 @@
 <div align="center">
-  <a href="https://v2.nonebot.dev/store"><img src="https://github.com/fllesser/nonebot-plugin-vocu/blob/master/.docs/NoneBotPlugin.svg" width="380" height="177" alt="NoneBotPluginLogo"></a>
-</div>
+    <a href="https://v2.nonebot.dev/store">
+    <img src="https://raw.githubusercontent.com/fllesser/nonebot-plugin-template/refs/heads/resource/.docs/NoneBotPlugin.svg" width="310" alt="logo"></a>
 
-<div align="center">
-
-# ✨ nonebot-plugin-vocu ✨
-
+## ✨ Nonebot2 Vocu 语音插件 ✨
 
 <a href="./LICENSE">
-    <img src="https://img.shields.io/github/license/fllesser/nonebot-plugin-vocu.svg" alt="license">
+    <img src="https://img.shields.io/github/license/fllesser/none bo t.svg" alt="license">
 </a>
 <a href="https://pypi.python.org/pypi/nonebot-plugin-vocu">
     <img src="https://img.shields.io/pypi/v/nonebot-plugin-vocu.svg" alt="pypi">
@@ -17,7 +14,9 @@
 <a href="https://github.com/astral-sh/ruff">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json" alt="ruff">
 </a>
-
+<a href="https://github.com/astral-sh/uv">
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json" alt="uv">
+</a>
 </div>
 
 
@@ -32,8 +31,12 @@ nonebot2 [vocu.ai](https://www.vocu.ai/) 插件
 在 nonebot2 项目的根目录下打开命令行, 输入以下指令即可安装
 
     nb plugin install nonebot-plugin-vocu --upgrade
+使用 **pypi** 源安装
 
     nb plugin install nonebot-plugin-vocu --upgrade -i "https://pypi.org/simple"
+使用**清华源**安装
+
+    nb plugin install nonebot-plugin-vocu --upgrade -i "https://pypi.tuna.tsinghua.edu.cn/simple"
 
 
 </details>
@@ -42,26 +45,30 @@ nonebot2 [vocu.ai](https://www.vocu.ai/) 插件
 <summary>使用包管理器安装</summary>
 在 nonebot2 项目的插件目录下, 打开命令行, 根据你使用的包管理器, 输入相应的安装命令
 
-<details>
-<summary>pip</summary>
+<details open>
+<summary>uv</summary>
 
-    pip install nonebot-plugin-vocu --upgrade -i "https://pypi.org/simple"
+    uv add nonebot-plugin-vocu
+安装仓库 master 分支
 
+    uv add git+https://github.com/fllesser/nonebot-plugin-vocu@master
 </details>
+
 <details>
 <summary>pdm</summary>
 
     pdm add nonebot-plugin-vocu
+安装仓库 master 分支
+
+    pdm add git+https://github.com/fllesser/nonebot-plugin-vocu@master
 </details>
 <details>
 <summary>poetry</summary>
 
     poetry add nonebot-plugin-vocu
-</details>
-<details>
-<summary>conda</summary>
+安装仓库 master 分支
 
-    conda install nonebot-plugin-vocu
+    poetry add git+https://github.com/fllesser/nonebot-plugin-vocu@master
 </details>
 
 打开 nonebot2 项目根目录下的 `pyproject.toml` 文件, 在 `[tool.nonebot]` 部分追加写入
@@ -72,7 +79,7 @@ nonebot2 [vocu.ai](https://www.vocu.ai/) 插件
 
 <details open>
 <summary>安装必要组件</summary>
-<summary>发送语音依赖于 ffmpeg</summary>
+发送语音依赖 ffmpeg
 
     # ubuntu/debian
     sudo apt-get install ffmpeg
