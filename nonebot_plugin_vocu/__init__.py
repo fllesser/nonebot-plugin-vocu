@@ -34,7 +34,7 @@ vocu_client = VocuClient()
 
 
 # xxx说xxx
-@on_regex(r"(.+?)说(.*)").handle()
+@on_regex(r"(.+?)说(.*)", block=False).handle()
 async def _(
     matcher: Matcher,
     bot: Bot,
