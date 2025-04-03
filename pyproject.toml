@@ -1,12 +1,11 @@
 [project]
 name = "nonebot-plugin-vocu"
-version = "0.3.1"
+version = "0.3.2"
 description = "nonebot2 onebot v11 Vocu 语音插件"
 readme = "README.md"
 authors = [{ name = "fllesser", email = "fllessive@gmail.com" }]
 requires-python = ">=3.10,<3.13"
 dependencies = [
-  # "httpx>=0.27.0,<1.0.0",
   "aiohttp>=3.10.0,<4.0.0",
   "tqdm>=4.67.1,<5.0.0",
   "aiofiles>=24.1.0",
@@ -28,10 +27,6 @@ test = [
 [tool.nonebot]
 plugins = ["nonebot_plugin_vocu"]
 
-
-[tool.uv.workspace]
-# members = ["nonebot_plugin_template", "tests"]
-exclude = [".docs"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
