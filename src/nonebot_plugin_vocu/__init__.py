@@ -19,7 +19,7 @@ __plugin_meta__ = PluginMetadata(
     },
 )
 
-import re
+from re import Match
 
 from nonebot.adapters.onebot.v11 import Bot, Message, MessageEvent, MessageSegment
 from nonebot.matcher import Matcher
@@ -39,7 +39,7 @@ async def _(
     matcher: Matcher,
     bot: Bot,
     event: MessageEvent,
-    matched: re.Match[str] = RegexMatched(),
+    matched: Match[str] = RegexMatched(),
 ):
     role_name = matched.group(1).strip()
     content = matched.group(2).strip()

@@ -289,15 +289,8 @@ class VocuClient:
         async with session.get(url) as response, aiofiles.open(file_path, "wb") as file:
             try:
                 response.raise_for_status()
-                with tqdm(
-                    total=int(response.headers.get("Content-Length", 0)),
-                    unit="B",
-                    unit_scale=True,
-                    unit_divisor=1024,
-                    dynamic_ncols=True,
-                    colour="green",
-                    desc=file_name,
-                ) as bar:
+                total = int(response.headers.get("Content-Length", 0))
+                with get_tqdm_bar(total=total, desc=file_name) as bar:
                     async for chunk in response.content.iter_chunked(1024 * 1024):
                         await file.write(chunk)
                         bar.update(len(chunk))
@@ -308,3 +301,15 @@ class VocuClient:
                 raise
 
         return file_path
+
+
+def get_tqdm_bar(total: int, desc: str):
+    return tqdm(
+        total=total,
+        unit="B",
+        unit_scale=True,
+        unit_divisor=1024,
+        dynamic_ncols=True,
+        colour="green",
+        desc=desc,
+    )
