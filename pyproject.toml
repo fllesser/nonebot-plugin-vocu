@@ -19,7 +19,7 @@ dev = ["nonebot2[fastapi]>=2.4.2,<3.0.0", "ruff>=0.9.10,<1.0.0"]
 
 test = [
   "nonebug>=0.3.7,<1.0.0",
-  "pytest-xdist>=3.6.1,<4.0.0",
+  "pytest-xdist>=3.8.0,<4.0.0",
   "pytest-asyncio>=1.0.0,<1.1.0",
 ]
 
@@ -28,10 +28,11 @@ test = [
 plugins = ["nonebot_plugin_vocu"]
 
 
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
-pythonpath = [".", "nonebot_plugin_template", "tests"]
+pythonpath = ["src"]
 addopts = [
   "-v",               # 详细输出
   "-s",               # 显示打印信息
@@ -41,6 +42,7 @@ addopts = [
   # "--doctest-modules", # 运行文档测试
   "--import-mode=prepend", # 导入模式
 ]
+
 
 
 [tool.ruff]
@@ -96,11 +98,15 @@ pythonVersion = "3.10"
 pythonPlatform = "All"
 defineConstant = { PYDANTIC_V2 = true }
 executionEnvironments = [
-  { root = "./tests", extraPaths = [
-    "./",
-  ] },
-  { root = "./" },
+    { root = "./tests", extraPaths = [
+        "./src",
+    ] },
+    { root = "./src" },
 ]
 typeCheckingMode = "standard"
 reportShadowedImports = false
 disableBytesTypePromotions = true
+
+[build-system]
+requires = ["uv_build>=0.7.19,<0.8.0"]
+build-backend = "uv_build"
