@@ -289,22 +289,26 @@ class VocuClient:
         async with session.get(url) as response, aiofiles.open(file_path, "wb") as file:
             try:
                 response.raise_for_status()
-                with tqdm(
-                    total=int(response.headers.get("Content-Length", 0)),
-                    unit="B",
-                    unit_scale=True,
-                    unit_divisor=1024,
-                    dynamic_ncols=True,
-                    colour="green",
-                    desc=file_name,
-                ) as bar:
+                with get_tqdm_bar(total=int(response.headers.get("Content-Length", 0)), desc=file_name) as bar:
                     async for chunk in response.content.iter_chunked(1024 * 1024):
                         await file.write(chunk)
                         bar.update(len(chunk))
-            except (aiohttp.ClientError, asyncio.TimeoutError) as e:
+            except aiohttp.ClientError:
                 if file_path.exists():
                     file_path.unlink()
-                logger.error(f"url: {url}, file_path: {file_path} 下载过程中出现异常{e}")
+                logger.exception(f"url: {url}, file_path: {file_path} 下载过程中出现异常")
                 raise
 
         return file_path
+
+
+def get_tqdm_bar(total: int, desc: str):
+    return tqdm(
+        total=total,
+        unit="B",
+        unit_scale=True,
+        unit_divisor=1024,
+        dynamic_ncols=True,
+        colour="green",
+        desc=desc,
+    )
