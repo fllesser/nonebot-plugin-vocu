@@ -1,0 +1,200 @@
+
+https://turing.captcha.qcloud.com/cap_union_new_verify
+请求方法
+POST
+状态代码
+200 OK
+远程地址
+198.18.25.221:443
+引用站点策略
+strict-origin-when-cross-origin
+accept-ranges
+bytes
+access-control-allow-origin
+*
+connection
+keep-alive
+content-length
+229
+content-type
+application/json
+date
+Sat, 05 Jul 2025 03:34:06 GMT
+p3p
+CP=CAO PSA OUR
+pragma
+No-cache
+server
+Trpc httpd
+server
+tencent http server
+accept
+application/json, text/javascript, */*; q=0.01
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+zh,zh-CN;q=0.9,en;q=0.8,en-US;q=0.7
+connection
+keep-alive
+content-length
+2995
+content-type
+application/x-www-form-urlencoded; charset=UTF-8
+host
+turing.captcha.qcloud.com
+origin
+https://turing.captcha.gtimg.com
+referer
+https://turing.captcha.gtimg.com/
+sec-ch-ua
+"Not)A;Brand";v="8", "Chromium";v="138", "Microsoft Edge";v="138"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"macOS"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+cross-site
+user-agent
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0
+
+
+负载
+collect
++HHTPZVfaWRKMKy5oGAFMge3Ojsk1RKuQimZf6gPx4/sKmjfngzkWILbgBhvEmiLbkBchS2btGlC9Uhdax7Mt1sj7+YRkWNR5DfWFooB1ioGy5w0MKBbQVOvj9nG2lu1xEOSn8mzzcyg3yNfZ4zBc6tx+xjnL9k5AMVIC66+PJzTmhQz+R43MX6MCe7SmK8zKPd+8r4+UzshxThgxkL3LFhXiWCxVcJ0wqUpWOG5oMxUo8Zm0ZDHEB+Q/EWHcfP2dEGWPRwV2876T6NmlLVtTq39Gzw16KqD4uE4hxk4KCfn0pCpypffhUT7noISNLRFfctIfNM8RH3C2polU+1pzK5r6AKUKRJDGKHeii5YQ9Kph7EzFvN1YkxVVwQlhifsejgJH1ldTxpUo2OrZqFkvOyCpd/ibNpGmGvjlnqvBJfmCHvJu2NjUKz4wFCnrVqRcCLGq4xIzlI0esbsMlpZpw1ZfV8RwWlswTVJX4lTulmpt8Sh5usQnxHoQyk8tVQ2Y4lu6CbykjDwHZ8A6zb3Sac0RA+9DNOt8aYSJC4O2Glxlekq4s4c3LLPZzEXVhMaCNPiNTBysgn6I/4hdLLJRLOrg1WWEqYUBl6I7Il+1XHevL/9MU6FrVnnxe4Ums2IK/8coiG0CxJXcp929JlUv23aTE2b3Wu+S5hh4XHsIrVvO3vU/Un8njDyt6qgQz+0FsAKVoell0trz70gPmucq/zotP91AxXLDvRJvWzhPyKqx50WKN6mFDFjbPxR2V3ye9brCX4bWNJL/P8MMu8AhC76xNQKOAylrgda8QcChpdEM1VGLAXKmsw4B868qB8BliWh5lqXYF7QVwcju0UugbDC2+TuHZD4vYTQVKodLZTs6MhxWgG+eXN0laVgxTL3WUFj/oZyLCDfD6P9NRZWQ7GjmFza/XXJeNIvwEd9ma8aC7byiplKcmTMj/2uur6SlxIN4RPzrEFeVxy6M8cAz4avK9xB0Coehq8r3EHQKh7JybAxM38VgC/dP2byKZ+QnWGj4vfAg0i9VqQnKi2NID2WWbh68oQ5k3FxRrWEqlfefXMBAOOJmWl7csIE9ZR8gPNZPnoMMdyKj+iqxSGnjZekJ6rnUhzGyJoVUrddX0a4Hb+pXC7aybGszH+2j0X8Z9xeKpZEvunnxc+ucfffs2OWI9OBRSBPB8NhCMdeGSSfc4TqPXzjI8mcQV8kH8UpN6l95kAIdKjRgbxzvpPVu8exvkYS4NDnYUpzlS+jNVnwllVIk/jVyV21J8UpFSHEnj1NiV/UIa/CTTsRdUDE+f3R6zC++qv3v/wcLyD7wN5ltzkxOTorX0SBybm7j5pox+AIaxMceUqWOfDvbVm+DOejKWq1cFk2mtWqDSiGc4B41/8hXubWAp9tICJUJ12lKM4pzhugMzGOS+NLCqrBd8veZUQkhO4K4JlcnwrrHaGr5W+5V2ElE8U6Vszuxfxr+8Bq5R727iy298dSn18MqDDyt6qgQz+0GlzFM9jvpnRIdHkZ/0XLqVcUNPuW8htTEAb5h0HhmTSNWIvMtVIxZ/xbAHLZ/983TUiIFjpbR40trLL9DWmYymFrIOH+R4oYMgfBzXKnBoKvlXEC7Os4Ra5GmgofB0V3RGo49pVeuIA9tB/FZ0qLYTsNz0u0sYeIKICdHySzaBcw8reqoEM/tDDyt6qgQz+0gDWpGbGJZ3qLI3Tndnl3Q3btZKH9FR8xDn6kWHHSlniK81K15wrP4w==
+tlg
+1752
+eks
+MZVzba1RhWAJ71UDIgbfhSssuLp/INPvuEjs2G0pZKlzJ41VXbfovy1KIhBDGeXNWW87ONidRcuzVfr4SqA8dcJtYRRKX+l538z+vro7JlUu5uHPRMQX3UGIPA354fqBZ6ficy+1vBjisW1wzuLBWMFH0GWH0LMNwPCzhRNc9LMHFBiWefZQfxPXX9dWD1P+Vi4QlBsoPqzEOC8/URBW62HNCo/LbJFoy/x9QUj/Uuc=
+sess
+s0EypqI97wMD2YFc_mBxxzlw9nRbLSVtgrpQvM5PcZjgVXzbPUer_HxRt1WVRVbrukb2hufz1fqPLDz8AaVF8njbPLhH4UxEXEpXjgcB5mqb_svMsD6E_A6SUgCUbr16Myr88E57JfTS_xuCJ4KOBPKBfWTgyJ-oYfbr5nBdSF_1nZwP5owFp3jBiIo96trADeEAn7C--J24F-Mylq5DBdVg0t4WyyYxEk_dByiyO-LmbpBWE-BbNEVBD90B32C0HguVMvndwSlxjhDVv9C9l46Y4Tf0uGcgqaQx8krDFsub1BM-b00OMj4l645zPjwp4JsXp7d3FlQnVC9O_59MGA_dLsaZfreqMXO6qAbeZ5C3CagHyfXX5Px2Pa685GXb12-khq3ypjmff5ggVGo1IEkPUAifj0MLzL4qKn55poEDVwDf01HjYjl6-7W3QRzaoG7DLfEZbxLYftL-81KevehXcz2KEhPX3W9opzPfx7gzQ*
+ans
+[{"elem_id":1,"type":"DynAnswerType_POS","data":"233,345"},{"elem_id":2,"type":"DynAnswerType_POS","data":"434,241"},{"elem_id":3,"type":"DynAnswerType_POS","data":"108,237"}]
+pow_answer
+2bd52605be127e58#211854
+pow_calc_time
+656
+
+响应
+{
+    "errorCode": "0",
+    "randstr": "@OBp",
+    "ticket": "tr03VD4DFWh2J_iOSu7D3Nst4zwQDw4p_qrj1YfswjDllY9DO_yJiUNOKE_Wd5aNa7ZjsDME4oIEdqBd4TeEvTMjqw8gbDB4q_0pfj4XwgGgc9AlRSMuK9rqTcHOd7DcwC2YmCWMp-yu_rY*",
+    "traceId": "",
+    "errMessage": "",
+    "sess": ""
+}
+
+
+
+
+请求 URL
+https://v1.vocu.ai/api/billing/checkin
+请求方法
+POST
+状态代码
+200 OK
+远程地址
+198.18.25.225:443
+引用站点策略
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://www.vocu.ai
+cache-control
+no-cache
+cf-cache-status
+DYNAMIC
+cf-ray
+95a3ce066e67d1d9-ICN
+content-encoding
+br
+content-type
+application/json; charset=utf-8
+date
+Sat, 05 Jul 2025 03:34:07 GMT
+etag
+W/"61-Duhiz7iLrrWzSXI6Le+15/2B6Qs"
+nel
+{"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+ratelimit-limit
+150
+ratelimit-policy
+150;w=10
+ratelimit-remaining
+149
+ratelimit-reset
+10
+report-to
+{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=1UCNEwk6iy%2FZ66A7cF5w5V89Z%2BtJMOrueS%2F8YKwMa%2FS6gclQEG2x5v3x2hPvRSoLFOwl6oVWwcDPA2nPkJMVB%2BCslPt0qRgvoFds1tljGmKxuW6MWVWp8fkTAA7Vt%2F2p5jBHIjERVUg%3D"}],"group":"cf-nel","max_age":604800}
+server
+cloudflare
+server-timing
+cfL4;desc="?proto=TCP&rtt=3052&min_rtt=2624&rtt_var=726&sent=83&recv=88&lost=0&retrans=0&sent_bytes=19421&recv_bytes=8853&delivery_rate=1502228&cwnd=258&unsent_bytes=0&cid=26f9e4f0111bec47&ts=93557&x=0"
+vary
+Origin
+x-powered-by
+Express
+x-vocu-app-lang
+zh-CN
+x-vocu-app-request-id
+3c54da33-8f2e-4172-b61c-32f89effd619
+:authority
+v1.vocu.ai
+:method
+POST
+:path
+/api/billing/checkin
+:scheme
+https
+accept
+*/*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+zh,zh-CN;q=0.9,en;q=0.8,en-US;q=0.7
+authorization
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjN2E4M2RhLTE4MDctNDE5Ny04NTJiLWEzNzJiMDdjMTk0NCIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzUxNjg2NDEyLCJleHAiOjE3NTIyOTEyMTIsImlzcyI6ImFwaS9hY2NvdW50L3JlZ2lzdGVyIiwic3ViIjoiYWNjZXNzIiwianRpIjoiZHRnNmNvYTQ0eDI2In0.uLQ4zu179jGPY6Hz1R33c9iYEczKZ0w7gJQeTXD3R9U
+baggage
+sentry-environment=production,sentry-public_key=7872542ebef78f238a6bdda64d1364f5,sentry-trace_id=f597c3bd46ce44f69b206da4e0dfcd47
+content-length
+290
+content-type
+application/json
+origin
+https://www.vocu.ai
+priority
+u=1, i
+referer
+https://www.vocu.ai/
+sec-ch-ua
+"Not)A;Brand";v="8", "Chromium";v="138", "Microsoft Edge";v="138"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"macOS"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+sentry-trace
+f597c3bd46ce44f69b206da4e0dfcd47-8aab5b7dd855e2fa-0
+user-agent
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0
+x-vocu-app-lang
+zh
+
+负载
+{"cp":null,"tcr":{"appid":"194020629","ret":0,"ticket":"tr03VD4DFWh2J_iOSu7D3Nst4zwQDw4p_qrj1YfswjDllY9DO_yJiUNOKE_Wd5aNa7ZjsDME4oIEdqBd4TeEvTMjqw8gbDB4q_0pfj4XwgGgc9AlRSMuK9rqTcHOd7DcwC2YmCWMp-yu_rY*","randstr":"@OBp","verifyDuration":92,"actionDuration":5091,"sid":"7347105446483734528"}}
+
+响应
+{
+    "status": 200,
+    "message": "Check in successfully. 签到成功.",
+    "credit": 998,
+    "captchaResult": true
+}
